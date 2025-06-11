@@ -843,6 +843,19 @@ export const makeMessagesSocket = (config: SocketConfig) => {
 			options: MiscMessageGenerationOptions = { }
 		) => {
 			const userJid = authState.creds.me!.id
+			if(!options.ephemeralExpiration) {
+				if(isJidGroup(jid)) {
+					const groups = await sock.groupQuery(jid, 'get', [{
+						tag: 'query',
+						attrs: {
+							request: 'interactive'
+						}
+					}])
+					const metadata = getBinaryNodeChild(groups, 'group')
+					const expiration = getBinaryNodeChild(metadata, 'ephemeral')?.attrs?.expiration || 0
+					options.ephemeralExpiration = expiration
+				}
+			}
 			if(
 				typeof content === 'object' &&
 				'disappearingMessagesInChat' in content &&
