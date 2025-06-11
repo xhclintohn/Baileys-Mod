@@ -18,6 +18,20 @@
 
 </div>
 
+## 📖 Table of Contents
+
+- [Important Note](#important-note)
+- [Install](#install)
+- [Added Features and Improvements](#-added-features-and-improvements)
+- [Feature Examples](#feature-examples)
+  - [Newsletter Management](#newsletter-management)
+  - [Button and Interactive Message Management](#button-and-interactive-message-management)
+  - [AI Message Icon Customization](#ai-message-icon-customization)
+  - [Custom Pairing Code Generation](#custom-pairing-code-generation)
+- [Reporting Issues](#reporting-issues)
+- [Notes](#notes)
+---
+
 ## Important Note
 
 The original repository was initially removed by its creator and subsequently taken over by [WhiskeySockets](https://github.com/WhiskeySockets). Building upon this foundation, I have implemented several enhancements and introduced new features that were not present in the original repository. These improvements aim to elevate functionality and provide a more robust and versatile experience.
@@ -47,76 +61,78 @@ const { default: makeWASocket } = require("baileys")
 ```
 
 ## Added Features and Improvements
-Here are some of the features and improvements I have added:
 
-- **Support for Sending Messages to Channels**: You can now easily send messages to channels.
-
-- **Support for Button Messages and Interactive Messages**: Added the ability to send messages with buttons and interactive messages.
-
-- **AI Message Icon**: Added customizable AI icon settings for messages
-
-- **Profile Picture Settings**: Allows users to upload profile pictures in their original size without cropping, ensuring better quality and visual presentation.
-
-- **Custom Pairing Code**: Users can now create and customize pairing codes as they wish, enhancing convenience and security when connecting devices.
-
-- **Libsignal Fixes**: Cleaned up logs for a cleaner and more informative output.
+| Feature                               | Description                                                                                                                               |
+| :------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| 💬 **Send Messages to Channels**     | Supports sending text and media messages to channels.                                                            |
+| 🔘 **Button & Interactive Messages** | Supports sending button messages and interactive messages on WhatsApp Messenger and WhatsApp Business.                                                            |
+| 🤖 **AI Message Icon**               | Customize message appearances with an optional AI icon, adding a modern touch.                                                            |
+| 🖼️ **Full-Size Profile Pictures**    | Allows users to upload profile pictures in their original size without cropping, ensuring better quality and visual presentation.                                     |
+| 🔑 **Custom Pairing Codes**          | Users can now create and customize pairing codes as they wish, enhancing convenience and security when connecting devices.                                           |
+| 🛠️ **Libsignal Fixes**               | Enjoy a cleaner development experience with refined logs, providing more informative and less cluttered output from the libsignal library. |
 
 More features and improvements will be added in the future.
 
 ## Feature Examples
 
-### NEWSLETTER
+Here are some examples of features that have been added:
+
+### Newsletter Management
+
+<details>
+<summary style="font-weight: bold; cursor: pointer; padding: 8px; border-bottom: 1px solid #eee; margin-bottom: 5px;">Show Examples</summary>
+<div style="padding: 10px 15px; background: #f9f9f9; border: 1px solid #eee; border-top: none; border-radius: 0 0 5px 5px;">
 
 - **To get info newsletter**
-``` ts
+```ts
 const metadata = await sock.newsletterMetadata("invite", "xxxxx")
 // or
 const metadata = await sock.newsletterMetadata("jid", "abcd@newsletter")
 console.log(metadata)
 ```
 - **To update the description of a newsletter**
-``` ts
+```ts
 await sock.newsletterUpdateDescription("abcd@newsletter", "New Description")
 ```
 - **To update the name of a newsletter**
-``` ts
+```ts
 await sock.newsletterUpdateName("abcd@newsletter", "New Name")
 ```  
 - **To update the profile picture of a newsletter**
-``` ts
+```ts
 await sock.newsletterUpdatePicture("abcd@newsletter", buffer)
 ```
 - **To remove the profile picture of a newsletter**
-``` ts
+```ts
 await sock.newsletterRemovePicture("abcd@newsletter")
 ```
 - **To mute notifications for a newsletter**
-``` ts
+```ts
 await sock.newsletterUnmute("abcd@newsletter")
 ```
 - **To mute notifications for a newsletter**
-``` ts
+```ts
 await sock.newsletterMute("abcd@newsletter")
 ```
 - **To create a newsletter**
-``` ts
+```ts
 const metadata = await sock.newsletterCreate("Newsletter Name", "Newsletter Description")
 console.log(metadata)
 ```
 - **To delete a newsletter**
-``` ts
+```ts
 await sock.newsletterDelete("abcd@newsletter")
 ```
 - **To follow a newsletter**
-``` ts
+```ts
 await sock.newsletterFollow("abcd@newsletter")
 ```
 - **To unfollow a newsletter**
-``` ts
+```ts
 await sock.newsletterUnfollow("abcd@newsletter")
 ```
 - **To send reaction**
-``` ts
+```ts
 // jid, id message & emoticon
 // way to get the ID is to copy the message url from channel
 // Example: [ https://whatsapp.com/channel/xxxxx/175 ]
@@ -124,8 +140,14 @@ await sock.newsletterUnfollow("abcd@newsletter")
 const id = "175"
 await sock.newsletterReactMessage("abcd@newsletter", id, "🥳")
 ```
+</div>
+</details>
 
-### BUTTON MESSAGE & INTERACTIVE MESSAGE
+### Button and Interactive Message Management
+
+<details>
+<summary style="font-weight: bold; cursor: pointer; padding: 8px; border-bottom: 1px solid #eee; margin-bottom: 5px;">Show Examples</summary>
+<div style="padding: 10px 15px; background: #f9f9f9; border: 1px solid #eee; border-top: none; border-radius: 0 0 5px 5px;">
 
 - **To send button with text**
 ```ts
@@ -292,24 +314,41 @@ const interactiveMessage = {
 
 await sock.sendMessage(id, interactiveMessage, { quoted: null })
 ```
+</div>
+</details>
 
-### AI Icon
+### AI Message Icon Customization
+
+<details>
+<summary style="font-weight: bold; cursor: pointer; padding: 8px; border-bottom: 1px solid #eee; margin-bottom: 5px;">Show Example</summary>
+<div style="padding: 10px 15px; background: #f9f9f9; border: 1px solid #eee; border-top: none; border-radius: 0 0 5px 5px;">
 
 ```ts
-// just add "ai: true" function to sendMessage
-await sock.sendMessage(id, { text: "Hello Wold", ai: true })
+// To enable the AI icon for a message, simply add the "ai: true" parameter:
+await sock.sendMessage(id, { text: "Hello World", ai: true });
 ```
 
-### Custom Code Pairing
+</div>
+</details>
+
+### Custom Pairing Code Generation
+
+<details>
+<summary style="font-weight: bold; cursor: pointer; padding: 8px; border-bottom: 1px solid #eee; margin-bottom: 5px;">Show Example</summary>
+<div style="padding: 10px 15px; background: #f9f9f9; border: 1px solid #eee; border-top: none; border-radius: 0 0 5px 5px;">
 
 ```ts
 if(usePairingCode && !sock.authState.creds.registered) {
-    const phoneNumber = await question('Please enter your mobile phone number:\n')
-    const custom = "NSTRCODE" // must be 8 digits, can be letters or numbers
-    const code = await sock.requestPairingCode(phoneNumber, custom)
-    console.log(`Pairing code: ${code?.match(/.{1,4}/g)?.join('-') || code}`)
+    const phoneNumber = await question('Please enter your mobile phone number:\n');
+    // Define your custom 8-digit code (alphanumeric)
+    const customPairingCode = "NSTRCODE";
+    const code = await sock.requestPairingCode(phoneNumber, customPairingCode);
+    console.log(`Your Pairing Code: ${code?.match(/.{1,4}/g)?.join('-') || code}`);
 }
 ```
+*Note: The `question` function is a placeholder for your method of obtaining user input.*
+</div>
+</details>
 
 ## Reporting Issues
 If you encounter any issues while using this repository or any part of it, please feel free to open a [new issue](https://github.com/nstar-y/Bail/issues) here.
