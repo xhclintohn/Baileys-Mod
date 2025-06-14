@@ -1,16 +1,15 @@
 import { Boom } from '@hapi/boom'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import FormData from 'form-data';
-import * as cheerio from 'cheerio';
+import FormData from 'form-data'
+import * as cheerio from 'cheerio'
 import { exec } from 'child_process'
 import * as Crypto from 'crypto'
-import { fromBuffer } from 'file-type'
 import { once } from 'events'
 import { createReadStream, createWriteStream, promises as fs, writeFileSync, WriteStream } from 'fs'
 import type { IAudioMetadata } from 'music-metadata'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import * as path from 'path';
+import * as path from 'path'
 import Jimp from 'jimp'
 import { Readable, Transform } from 'stream'
 import { URL } from 'url'
@@ -86,6 +85,7 @@ interface UploadService {
 }
 
 export async function uploadFile(buffer: Buffer, logger?: ILogger): Promise<string> {
+	const { fromBuffer } = await import('file-type')
 	const fileType = await fromBuffer(buffer)
 	if(!fileType) throw new Error("Failed to detect file type.")
 
