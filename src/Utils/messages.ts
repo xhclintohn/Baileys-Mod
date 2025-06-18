@@ -945,6 +945,8 @@ export const normalizeMessageContent = (content: WAMessageContent | null | undef
 			 || message?.limitSharingMessage
 			 || message?.botTaskMessage
 			 || message?.questionMessage
+			 || message?.groupStatusMessageV2
+			 || message?.botForwardedMessage
 		 )
 	 }
 }
@@ -1020,10 +1022,9 @@ export const updateMessageWithReaction = (msg: Pick<WAMessage, 'reactions'>, rea
 
 	const reactions = (msg.reactions || [])
 		.filter(r => getKeyAuthor(r.key) !== authorID)
-	if(reaction.text) {
-		reactions.push(reaction)
-	}
 
+	reaction.text = reaction.text || ''
+	reactions.push(reaction)
 	msg.reactions = reactions
 }
 
