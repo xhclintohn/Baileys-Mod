@@ -65,6 +65,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		query,
 		upsertMessage,
 		resyncAppState,
+		groupMetadata,
 		onUnexpectedError,
 		assertSessions,
 		sendNode,
@@ -949,6 +950,14 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 							let type: MessageReceiptType = undefined
 							if(msg.key.participant?.endsWith('@lid')) {
 								msg.key.participant = node.attrs.participant_pn || authState.creds.me!.id
+							}
+							if(isJidGroup(msg.key.remoteJid!) && msg.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
+								if (msg.message.extendedTextMessage.contextInfo) {
+									const metadata = await groupMetadata(msg.key.remoteJid!)
+									const sender = msg.message.extendedTextMessage.contextInfo.participant
+									const found = metadata.participants.find(p => p.id === sender)
+									msg.message.extendedTextMessage.contextInfo.participant = found?.jid || sender
+								}
 							}
 							let participant = msg.key.participant
 							if(category === 'peer') { // special peer message

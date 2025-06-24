@@ -1,11 +1,13 @@
 
 import { Boom } from '@hapi/boom'
 import NodeCache from '@cacheable/node-cache'
+import { randomBytes } from 'crypto'
 import { Readable } from 'stream'
 import { proto } from '../../WAProto'
 import { DEFAULT_CACHE_TTLS, WA_DEFAULT_EPHEMERAL } from '../Defaults'
 import {
 	AnyMessageContent,
+	AlbumMedia,
 	MediaConnInfo,
 	MessageReceiptType,
 	MessageRelayOptions,
@@ -27,6 +29,7 @@ import {
 	generateMessageID,
 	generateMessageIDV2,
 	generateWAMessage,
+	generateWAMessageFromContent,
 	getContentType,
 	getStatusCodeForMediaRetry,
 	getUrlFromDirectPath,
@@ -867,6 +870,85 @@ export const makeMessagesSocket = (config: SocketConfig) => {
 					(disappearingMessagesInChat ? WA_DEFAULT_EPHEMERAL : 0) :
 					disappearingMessagesInChat
 				await groupToggleEphemeral(jid, value)
+			}
+			if(typeof content === 'object' && 'album' in content && content.album) {
+				const { album, caption } = content as ({ album: AlbumMedia[], caption?: string } & AnyMessageContent)
+
+				if(caption && !album[0].caption) {
+					album[0].caption = caption
+				}
+
+				let mediaHandle
+				let mediaMsg
+
+				const albumMsg = generateWAMessageFromContent(jid, {
+					albumMessage: {
+						expectedImageCount: album.filter(item => 'image' in item).length,
+						expectedVideoCount: album.filter(item => 'video' in item).length
+					}
+				}, { userJid, ...options })
+
+				await relayMessage(jid, albumMsg.message!, {
+					messageId: albumMsg.key.id!
+				})
+
+				for (const i in album) {
+					const media = album[i]
+					if('image' in media) {
+						mediaMsg = await generateWAMessage(jid,
+							{ 
+								image: media.image,
+								...(media.caption ? { caption: media.caption } : {}),
+								...options
+							},
+							{ 
+								userJid,
+								upload: async(readStream, opts) => {
+									const up = await waUploadToServer(readStream, { ...opts, newsletter: isJidNewsletter(jid) })
+									mediaHandle = up.handle
+									return up
+								},
+								...options, 
+							}
+						)
+					} else if('video' in media) {
+						mediaMsg = await generateWAMessage(jid,
+							{ 
+								video: media.video,
+								...(media.caption ? { caption: media.caption } : {}),
+								...(media.gifPlayback !== undefined ? { gifPlayback: media.gifPlayback } : {}),
+								...options
+							},
+							{ 
+								userJid,
+								upload: async(readStream, opts) => {
+									const up = await waUploadToServer(readStream, { ...opts, newsletter: isJidNewsletter(jid) })
+									mediaHandle = up.handle
+									return up
+
+								},
+								...options, 
+							}
+						)
+					}
+
+					if(mediaMsg) {
+						mediaMsg.message.messageContextInfo = {
+							messageSecret: randomBytes(32),
+							messageAssociation: {
+								associationType: 1,
+								parentMessageKey: albumMsg.key!
+							}
+						}
+					}
+
+					await relayMessage(jid, mediaMsg.message!, {
+						messageId: mediaMsg.key.id!
+					})
+
+					await new Promise(resolve => setTimeout(resolve, 800))
+				}
+				return albumMsg
 			} else {
 				let mediaHandle
 				const fullMsg = await generateWAMessage(
@@ -912,7 +994,7 @@ export const makeMessagesSocket = (config: SocketConfig) => {
 				// required for delete
 				if(isDeleteMsg) {
 					// if the chat is a group, and I am not the author, then delete the message as an admin
-					if((isJidGroup(content.delete?.remoteJid as string) && !content.delete?.fromMe) || isJidNewsletter(jid)) {
+					if((isJidGroup((content.delete as WAMessageKey).remoteJid!) && !(content.delete as WAMessageKey).fromMe) || isJidNewsletter(jid)) {
 						additionalAttributes.edit = '8'
 					} else {
 						additionalAttributes.edit = '7'

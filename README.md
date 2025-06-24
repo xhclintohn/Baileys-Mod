@@ -26,6 +26,7 @@
 - [Feature Examples](#feature-examples)
   - [Newsletter Management](#newsletter-management)
   - [Button and Interactive Message Management](#button-and-interactive-message-management)
+  - [Send Album Message](#send-album-message)
   - [AI Message Icon Customization](#ai-message-icon-customization)
   - [Custom Pairing Code Generation](#custom-pairing-code-generation)
 - [Reporting Issues](#reporting-issues)
@@ -64,12 +65,14 @@ const { default: makeWASocket } = require("baileys")
 
 | Feature                               | Description                                                                                                                               |
 | :------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| 💬 **Send Messages to Channels**     | Supports sending text and media messages to channels.                                                            |
-| 🔘 **Button & Interactive Messages** | Supports sending button messages and interactive messages on WhatsApp Messenger and WhatsApp Business.                                                            |
+| 💬 **Send Messages to Channels**     | Supports sending text and media messages to channels.                                                                                     |
+| 🔘 **Button & Interactive Messages** | Supports sending button messages and interactive messages on WhatsApp Messenger and WhatsApp Business.                                   |
+| 🖼️ **Send Album Messages**           | Supports sending multiple images as an album (grouped media message), enabling richer and more organized media sharing.                  |
+| 👥 **Group with LID Support**       | Full support for group using `@lid`, ensuring compatibility with the latest WhatsApp group addressing format.                         |
 | 🤖 **AI Message Icon**               | Customize message appearances with an optional AI icon, adding a modern touch.                                                            |
-| 🖼️ **Full-Size Profile Pictures**    | Allows users to upload profile pictures in their original size without cropping, ensuring better quality and visual presentation.                                     |
-| 🔑 **Custom Pairing Codes**          | Users can now create and customize pairing codes as they wish, enhancing convenience and security when connecting devices.                                           |
-| 🛠️ **Libsignal Fixes**               | Enjoy a cleaner development experience with refined logs, providing more informative and less cluttered output from the libsignal library. |
+| 🖼️ **Full-Size Profile Pictures**    | Allows users to upload profile pictures in their original size without cropping, ensuring better quality and visual presentation.         |
+| 🔑 **Custom Pairing Codes**          | Users can now create and customize pairing codes as they wish, enhancing convenience and security when connecting devices.                |
+| 🛠️ **Libsignal Fixes**               | Enjoy a cleaner development experience with refined logs, providing more informative and less cluttered output from the libsignal library.|
 
 More features and improvements will be added in the future.
 
@@ -116,7 +119,7 @@ await sock.newsletterMute("abcd@newsletter")
 ```
 - **To create a newsletter**
 ```ts
-const metadata = await sock.newsletterCreate("Newsletter Name", "Newsletter Description")
+const metadata = await sock.newsletterCreate("Newsletter Name")
 console.log(metadata)
 ```
 - **To delete a newsletter**
@@ -160,8 +163,7 @@ const buttonMessage = {
     text: "Hi it's button message",
     footer: 'Hello World',
     buttons,
-    headerType: 1,
-    viewOnce: true
+    headerType: 1
 }
 
 await sock.sendMessage(id, buttonMessage, { quoted: null })
@@ -178,8 +180,7 @@ const buttonMessage = {
     caption: "Hi it's button message with image",
     footer: 'Hello World',
     buttons,
-    headerType: 1,
-    viewOnce: true
+    headerType: 1
 }
 
 await sock.sendMessage(id, buttonMessage, { quoted: null })
@@ -197,8 +198,7 @@ const buttonMessage = {
     caption: "Hi it's button message with video",
     footer: 'Hello World',
     buttons,
-    headerType: 1,
-    viewOnce: true
+    headerType: 1
 }
 
 await sock.sendMessage(id, buttonMessage, { quoted: null })
@@ -314,6 +314,73 @@ const interactiveMessage = {
 
 await sock.sendMessage(id, interactiveMessage, { quoted: null })
 ```
+- **To send list interactive**
+```ts
+const interactiveButtons = [
+  {
+    name: "single_select",
+    buttonParamsJson: JSON.stringify({
+      title: "message",
+      sections: [
+        {
+          title: "title",
+          highlight_label: "label",
+          rows: [
+            {
+              header: "HEADER",
+              title: "TITLE",
+              description: "DESCRIPTION",
+              id: "YOUR ID"
+            },
+            {
+              header: "HEADER",
+              title: "TITLE",
+              description: "DESCRIPTION",
+              id: "YOUR ID"
+            }
+          ]
+        }
+      ]
+    })
+  }
+];
+
+const interactiveMessage = {
+    text: "Hello World!",
+    title: "this is the title",
+    footer: "this is the footer",
+    interactiveButtons
+};
+
+await sock.sendMessage(id, interactiveMessage, { quoted: null });
+```
+
+</div>
+</details>
+
+### Send Album Message
+
+<details>
+<summary style="font-weight: bold; cursor: pointer; padding: 8px; border-bottom: 1px solid #eee; margin-bottom: 5px;">Show Example</summary>
+<div style="padding: 10px 15px; background: #f9f9f9; border: 1px solid #eee; border-top: none; border-radius: 0 0 5px 5px;">
+
+```ts
+// Media can be a URL, buffer, or path.
+const media = [
+  {
+    image: { url: "https://example.com/image.jpg" }
+  },
+  {
+    image: await getBuffer("https://example.com/image.jpg")
+  },
+  {
+    video: { url: "https://example.com/video.mp4" }
+  }
+]
+
+await sock.sendMessage(id, { album: media, caption: "testing send album" }, { quoted: null })
+```
+
 </div>
 </details>
 
