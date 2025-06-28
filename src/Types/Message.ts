@@ -245,7 +245,7 @@ export type AlbumMedia =
 
 export type AnyRegularMessageContent = (
     ({
-	    text: string
+        text: string
         linkPreview?: WAUrlInfo | null
     }
     & Mentionable & Contextable & Buttonable & Templatable & Interactiveable & Shopable & Cardsable & Listable & Editable)
@@ -324,13 +324,13 @@ export type AnyRegularMessageContent = (
 ) & ViewOnce
 
 export type AnyMessageContent = AnyRegularMessageContent | {
-	forward: WAMessage
-	force?: boolean
+    forward: WAMessage
+    force?: boolean
 } | {
     /** Delete your message or anyone's message in a group (admin required) */
-	delete: WAMessageKey
+    delete: WAMessageKey
 } | {
-	disappearingMessagesInChat: boolean | number
+    disappearingMessagesInChat: boolean | number
 }
 
 export type GroupMetadataParticipants = Pick<GroupMetadata, 'participants'>
@@ -357,9 +357,9 @@ export type MessageRelayOptions = MinimalRelayOptions & {
 
 export type MiscMessageGenerationOptions = MinimalRelayOptions & {
     /** optional, if you want to manually set the timestamp of the message */
-	timestamp?: Date
+    timestamp?: Date
     /** the message you want to quote */
-	quoted?: WAMessage
+    quoted?: WAMessage
     /** disappearing messages settings */
     ephemeralExpiration?: number | string
     /** timeout for media upload to WA server */
@@ -376,7 +376,7 @@ export type MiscMessageGenerationOptions = MinimalRelayOptions & {
     additionalNodes?: BinaryNode[];
 }
 export type MessageGenerationOptionsFromContent = MiscMessageGenerationOptions & {
-	userJid: string
+    userJid: string
 }
 
 export type WAMediaUploadFunctionOpts = { fileEncSha256B64: string, mediaType: MediaType, newsletter?: boolean, timeoutMs?: number }
@@ -384,7 +384,7 @@ export type WAMediaUploadFunctionOpts = { fileEncSha256B64: string, mediaType: M
 export type WAMediaUploadFunction = (readStream: Readable | Buffer, opts: WAMediaUploadFunctionOpts) => Promise<{ mediaUrl: string, directPath: string, handle?: string }>
 
 export type MediaGenerationOptions = {
-	logger?: ILogger
+    logger?: ILogger
     mediaTypeOverride?: MediaType
     upload: WAMediaUploadFunction
     /** cache media so it does not have to be uploaded again */
@@ -402,8 +402,8 @@ export type MediaGenerationOptions = {
     newsletter?: boolean
 }
 export type MessageContentGenerationOptions = MediaGenerationOptions & {
-	getUrlInfo?: (text: string) => Promise<WAUrlInfo | undefined>
-	getProfilePicUrl?: (jid: string, type: 'image' | 'preview') => Promise<string | undefined>
+    getUrlInfo?: (text: string) => Promise<WAUrlInfo | undefined>
+    getProfilePicUrl?: (jid: string, type: 'image' | 'preview') => Promise<string | undefined>
 }
 export type MessageGenerationOptions = MessageContentGenerationOptions & MessageGenerationOptionsFromContent
 

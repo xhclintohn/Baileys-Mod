@@ -15,8 +15,25 @@ import { Readable, Transform } from 'stream'
 import { URL } from 'url'
 import { proto } from '../../WAProto'
 import { DEFAULT_ORIGIN, MEDIA_HKDF_KEY_MAPPING, MEDIA_PATH_MAP } from '../Defaults'
-import { BaileysEventMap, DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, MediaType, MessageType, SocketConfig, WAGenericMediaMessage, WAMediaUpload, WAMediaUploadFunction, WAMessageContent } from '../Types'
-import { BinaryNode, getBinaryNodeChild, getBinaryNodeChildBuffer, jidNormalizedUser } from '../WABinary'
+import {
+	BaileysEventMap,
+	DownloadableMessage,
+	MediaConnInfo,
+	MediaDecryptionKeyInfo,
+	MediaType,
+	MessageType,
+	SocketConfig,
+	WAGenericMediaMessage,
+	WAMediaUpload,
+	WAMediaUploadFunction,
+	WAMessageContent
+} from '../Types'
+import {
+	BinaryNode,
+	getBinaryNodeChild,
+	getBinaryNodeChildBuffer,
+	jidNormalizedUser
+} from '../WABinary'
 import { aesDecryptGCM, aesEncryptGCM, hkdf } from './crypto'
 import { generateMessageIDV2 } from './generics'
 import { ILogger } from './logger'
@@ -671,7 +688,7 @@ export const downloadContentFromMessage = async(
 ) => {
 	const isValidMediaUrl = url?.startsWith('https://mmg.whatsapp.net/')
 	const downloadUrl = isValidMediaUrl ? url : getUrlFromDirectPath(directPath!)
-	if (!downloadUrl) {
+	if(!downloadUrl) {
 		throw new Boom('No valid media URL or directPath present in message', { statusCode: 400 })
 	}
 

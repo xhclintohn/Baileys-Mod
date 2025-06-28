@@ -5,7 +5,20 @@ import { randomBytes } from 'crypto'
 import NodeCache from '@cacheable/node-cache'
 import { proto } from '../../WAProto'
 import { DEFAULT_CACHE_TTLS, KEY_BUNDLE_TYPE, MIN_PREKEY_COUNT } from '../Defaults'
-import { MessageReceiptType, MessageRelayOptions, MessageUserReceipt, MexOperations, NewsletterSettingsUpdate, SocketConfig, WACallEvent, WAMessageKey, WAMessageStatus, WAMessageStubType, WAPatchName, XWAPaths } from '../Types'
+import {
+	MessageReceiptType,
+	MessageRelayOptions,
+	MessageUserReceipt,
+	MexOperations,
+	NewsletterSettingsUpdate,
+	SocketConfig,
+	WACallEvent,
+	WAMessageKey,
+	WAMessageStatus,
+	WAMessageStubType,
+	WAPatchName,
+	XWAPaths
+} from '../Types'
 import {
 	aesDecryptCTR,
 	aesEncryptGCM,
@@ -131,7 +144,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 		await sendNode(stanza)
 	}
 
-	const offerCall = async (toJid: string, isVideo: boolean = false) => {
+	const offerCall = async(toJid: string, isVideo: boolean = false) => {
 		const callId = randomBytes(16).toString('hex').toUpperCase().substring(0, 64)
 
 		const offerContent: BinaryNode[] = []
@@ -950,7 +963,7 @@ export const makeMessagesRecvSocket = (config: SocketConfig) => {
 								msg.key.participant = node.attrs.participant_pn || authState.creds.me!.id
 							}
 							if(isJidGroup(msg.key.remoteJid!) && msg.message?.extendedTextMessage?.contextInfo?.participant?.endsWith('@lid')) {
-								if (msg.message.extendedTextMessage.contextInfo) {
+								if(msg.message.extendedTextMessage.contextInfo) {
 									const metadata = await groupMetadata(msg.key.remoteJid!)
 									const sender = msg.message.extendedTextMessage.contextInfo.participant
 									const found = metadata.participants.find(p => p.id === sender)

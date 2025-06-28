@@ -22,12 +22,20 @@ import {
 	WAMessageContent,
 	WAMessageStatus,
 	WAProto,
-	WATextMessage,
+	WATextMessage
 } from '../Types'
 import { isJidGroup, isJidNewsletter, isJidStatusBroadcast, jidNormalizedUser } from '../WABinary'
 import { sha256 } from './crypto'
 import { generateMessageIDV2, getKeyAuthor, unixTimestampSeconds } from './generics'
-import { downloadContentFromMessage, encryptedStream, generateThumbnail, getAudioDuration, getAudioWaveform, MediaDownloadOptions, prepareStream } from './messages-media'
+import {
+	downloadContentFromMessage,
+	encryptedStream,
+	generateThumbnail,
+	getAudioDuration,
+	getAudioWaveform,
+	MediaDownloadOptions,
+	prepareStream
+} from './messages-media'
 
 type MediaUploadData = {
 	media: WAMediaUpload
