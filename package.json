@@ -7,9 +7,9 @@
     "js-whatsapp", "whatsapp-api", "whatsapp-web", "whatsapp-bot",
     "automation", "multi-device"
   ],
-  "homepage": "https://github.com/nstar-y/bail",
+  "homepage": "https://github.com/xhclintohn/Baileys-Mod",
   "repository": {
-    "url": "git+ssh://git@github.com/<YOUR_GITHUB_USERNAME>/bail.git"
+    "url": "git+ssh://git@github.com/xhclintohn/Baileys-Mod.git"
   },
   "license": "MIT",
   "author": "Adhiraj Singh",
@@ -72,7 +72,7 @@
     "sharp": "^0.34.2",
     "ts-jest": "^27.1.5",
     "ts-node": "^10.9.2",
-    "typedoc": "latest",
+    "typedoc": "^0.27.11",
     "typescript": "^4.9.5"
   },
   "peerDependencies": {
